@@ -1,12 +1,12 @@
 #' Title
 #'
-#' @param .data
-#' @param Y
-#' @param metadata
-#' @param filter_column
-#' @param filter_value
+#' @param .data data.frame
+#' @param Y Y
+#' @param metadata metadata
+#' @param filter_column column in metadata
+#' @param filter_value value in filter_column
 #'
-#' @return
+#' @return a filter list of dataframe
 #' @export
 #'
 #' @examples
@@ -51,7 +51,7 @@ filter_from_metadata <- function(.data,
     metadata_filtered <- dplyr::select(metadata_filtered, -Y)
     res_filtered[["Y"]] <- filter_guide_df_filtered$Y
   }
-  res_filtered[["metadata"]] <- metadata_filtered
+  res_filtered[[".metadata"]] <- metadata_filtered
 
   return(res_filtered)
 }

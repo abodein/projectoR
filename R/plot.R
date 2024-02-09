@@ -1,9 +1,9 @@
-#' plot_projection
+#' plot_projectionObj
 #'
 #' a short description
 #'
-#' @param projection
-#' @param color The name of the column in \code{projection$coord} to use to color the
+#' @param x projectionObj
+#' @param color The name of the column in \code{projectionObj$coord} to use to color the
 #' points in the plot. If \code{NULL}, won't add color. Default: \code{NULL}.
 #' @param shape The name of the column in \code{res_pca$coord} to use to define
 #' the shape of the points in the PCA. If \code{NULL}, won't add change the shape.
@@ -23,27 +23,28 @@
 #' \code{TRUE}.
 #'
 #'
-#' @return
 #' @export
 #'
-plot.projection <- function(projection,
+plot.projection <- function(x,
                             color = NULL, shape = NULL, size = 3,
                             show_names = TRUE,
                             title = NULL,
                             legend = TRUE, legend.position = "right",
                             legend.box = "vertical",
-                            graph = TRUE){
+                            graph = TRUE
+                            ){
 
+  projectionObj <- x
   # check
-  checkmate::assert_list(projection, types = c("data.frame", "character"), len = 2)
-  checkmate::assert_data_frame(projection$coord, min.rows = 2, min.cols = 3)
-  checkmate::assert_character(projection$labs, len = 2)
+  checkmate::assert_list(projectionObj, types = c("data.frame", "character"), len = 2)
+  checkmate::assert_data_frame(projectionObj$coord, min.rows = 2, min.cols = 3)
+  checkmate::assert_character(projectionObj$labs, len = 2)
 
   checkmate::assert_character(color, len = 1, null.ok = TRUE)
-  checkmate::assert_choice(color, names(projection$coord), null.ok = TRUE)
+  checkmate::assert_choice(color, names(projectionObj$coord), null.ok = TRUE)
 
   checkmate::assert_character(shape, len = 1, null.ok = TRUE)
-  checkmate::assert_choice(shape, names(projection$coord), null.ok = TRUE)
+  checkmate::assert_choice(shape, names(projectionObj$coord), null.ok = TRUE)
 
   checkmate::assert_double(size, lower = 0.01, len = 1)
 
@@ -63,13 +64,13 @@ plot.projection <- function(projection,
   ## To avoid 6 shapes limitation
   if (!is.null(shape)) {
     shape_vec <- c(15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14)
-    shape_vec <- shape_vec[1:length(unique(projection$coord[[shape]]))]
+    shape_vec <- shape_vec[1:length(unique(projectionObj$coord[[shape]]))]
   }
 
 
-  gg <- ggplot2::ggplot(projection$coord, ggplot2::aes(x = Dim1, y = Dim2)) +
+  gg <- ggplot2::ggplot(projectionObj$coord, ggplot2::aes(x = Dim1, y = Dim2)) +
     ggplot2::theme_bw() +
-    ggplot2::labs(x = projection$labs[1], y = projection$labs[2])
+    ggplot2::labs(x = projectionObj$labs[1], y = projectionObj$labs[2])
 
   ## Add color and shape
   if (!is.null(color) & !is.null(shape)) {

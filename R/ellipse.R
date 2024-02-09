@@ -1,36 +1,37 @@
 #' Title
 #'
-#' @param x
+#' @param x projectionObj
 #'
-#' @return
+#' @return a tibble
 #' @export
 #'
 #' @examples
 #' data(iris)
 #' .data <- iris[1:4]
 #' rownames(.data) <- paste0("sample_", 1:nrow(.data))
-#' metadata <- data.frame(sample =  paste0("sample_", 1:nrow(.data)), species = iris$Species)
+#' .metadata <- data.frame(sample =  paste0("sample_", 1:nrow(.data)), species = iris$Species)
 
 #' Y = iris$Species %>% as.factor() %>% as.numeric()
-#' res_pca <- produce_pca_df(.data, metadata = metadata)
+#' res_pca <- projection(.data, .metadata = .metadata, method = "pca")
+#'
 #' res_ellipse <- get_ellipse(res_pca, group = "species")
 #' res_ellipse <- get_ellipse(res_pca)
 #'
-#' cbind(dplyr::select(res_ellipse, c(group, sample)) %>% unnest(), dplyr::select(res_ellipse, c(inside_distance)) %>% unnest())
-#'
+#' res_ellipse %>% dplyr::select(c(sample, group, inside_distance)) %>% unnest(cols = c(sample, inside_distance))
 
-get_ellipse <- function(projection.obj, group = NULL, ellipse.level = 0.95){
+
+get_ellipse <- function(projectionObj, group = NULL, ellipse.level = 0.95){
 
   # validate projection object
 
   # validate group
-  checkmate::assert_choice(group, names(projection.obj$coord), null.ok = TRUE)
+  checkmate::assert_choice(group, names(projectionObj$coord), null.ok = TRUE)
 
   # validate ellipse.level
 
-  ellipse_df <- projection.obj$coord
+  ellipse_df <- projectionObj$coord
   if(!is.null(group)){
-    ellipse_df[, "group"] <- projection.obj$coord[, group]
+    ellipse_df[, "group"] <- projectionObj$coord[, group]
   } else {
     ellipse_df[, "group"] <- "no_group"
   }

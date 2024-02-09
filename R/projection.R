@@ -40,7 +40,7 @@ projection <- function(.data,
 
   # projection
   if(method == "pca"){
-    projectionObj <- produce_pca_df(.data - .data,  ...)
+    projectionObj <- produce_pca_df(.data = .data,  ...)
   } #TODO: COMPLETE else if ... umap ...
 
   if(!is.null(.metadata)){
