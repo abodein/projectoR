@@ -13,7 +13,12 @@
 
 #' Y = iris$Species %>% as.factor() %>% as.numeric()
 #' res_pca <- produce_pca_df(.data, metadata = metadata)
-#' get_ellipse(res_pca, group = "species")
+#' res_ellipse <- get_ellipse(res_pca, group = "species")
+#' res_ellipse <- get_ellipse(res_pca)
+#'
+#' cbind(dplyr::select(res_ellipse, c(group, sample)) %>% unnest(), dplyr::select(res_ellipse, c(inside_distance)) %>% unnest())
+#'
+
 get_ellipse <- function(projection.obj, group = NULL, ellipse.level = 0.95){
 
   # validate projection object

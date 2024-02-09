@@ -25,6 +25,10 @@ produce_pca_df <- function(.data, ...){
                        "Dim1" = unname(pca.res$variates$X[,1]),
                        "Dim2" = unname(pca.res$variates$X[,2]))
 
+  projectionObj <- list()
+  projectionObj[["coord"]] <- pca.df
+  projectionObj[["labs"]] <- labs
+
   return(list("coord" = pca.df, "labs" = labs))
 }
 
