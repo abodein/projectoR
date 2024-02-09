@@ -27,7 +27,7 @@ require(ggrepel)
 #'
 #' projection.obj <- produce_pca_df(X, metadata)
 #'
-produce_pca_df <- function(.data, metadata = NULL, sample_col = "sample"){
+old_produce_pca_df <- function(.data, metadata = NULL, sample_col = "sample"){
 
   # check
   checkmate::assert_data_frame(.data, types = "numeric")
@@ -68,7 +68,7 @@ produce_pca_df <- function(.data, metadata = NULL, sample_col = "sample"){
 #' @return a list
 #' @export
 #'
-produce_plsda_df <- function(.data, Y, metadata = NULL, sample_col = "sample", ...){
+old_produce_plsda_df <- function(.data, Y, metadata = NULL, sample_col = "sample", ...){
 
   # check
   checkmate::assert_data_frame(.data, types = "numeric")
@@ -99,7 +99,7 @@ produce_plsda_df <- function(.data, Y, metadata = NULL, sample_col = "sample", .
   return(res)
 }
 
-produce_tSNE_df <- function(.data, seed = 1, initial_dims = 2, metadata = NULL, sample_col = "sample",  ...){
+old_produce_tSNE_df <- function(.data, seed = 1, initial_dims = 2, metadata = NULL, sample_col = "sample",  ...){
   checkmate::assert_integer(as.integer(seed))
   checkmate::assert_integer(as.integer(initial_dims))
 
@@ -123,7 +123,7 @@ produce_tSNE_df <- function(.data, seed = 1, initial_dims = 2, metadata = NULL, 
   return(list("coord" = tsne.df, "labs" = c("X1", "X2")))
 }
 
-produce_umap_df <- function(.data, n_components = 2, random_state = 1,
+old_produce_umap_df <- function(.data, n_components = 2, random_state = 1,
                             metadata = NULL, sample_col = "sample",  ...){
 
   checkmate::assert_integer(as.integer(n_components))

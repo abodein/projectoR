@@ -26,7 +26,7 @@
 #' @return
 #' @export
 #'
-plot_projection <- function(projection,
+plot.projection <- function(projection,
                             color = NULL, shape = NULL, size = 3,
                             show_names = TRUE,
                             title = NULL,
