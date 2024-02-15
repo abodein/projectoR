@@ -49,8 +49,8 @@ get_ellipse <- function(projectionObj, group = NULL, ellipse.level = 0.95){
                                 ~ellipse::ellipse(x = .x, centre = .y,
                                          level = ellipse.level))) %>%
     mutate(coord_ellipse = imap(coord_ellipse, ~.x %>% as.data.frame %>% set_names(c("Dim1", "Dim2")))) %>%
-    mutate(ellipse_params = map2(cdg, coord_ellipse,~get_ellipse_params(.x, .y))) %>%
-    mutate(inside_distance = map2(ellipse_params, dims, ~inside_ellipse(.x, .y)))
+#   mutate(ellipse_params = map2(cdg, coord_ellipse,~get_ellipse_params(.x, .y))) %>%
+    mutate(inside_ellipse = map2(coord_ellipse, dims, ~inside_ellipse(.x, .y)))
 
   return(ellipse_df_nested)
 }
@@ -69,9 +69,16 @@ get_ellipse_params <- function(ellipse_center, ellipse_coord){
   return(ellipse_params)
 }
 
+inside_ellipse <- function(coord_ellipse, dims){
+  inside <- sp::point.in.polygon(point.x = dims$Dim1,
+                       point.y = dims$Dim2,
+                       pol.x = coord_ellipse$Dim1,
+                       pol.y = coord_ellipse$Dim2)
+  return(tibble(inside = inside))
+}
 
 # points <- ellipse_df_nested$dims[[1]]
-inside_ellipse <- function(ellipse_params, points){
+.inside_ellipse <- function(ellipse_params, points){
 
   distance_disc_ellipse <- function(x, y, rx, ry, h, k){
     theta = atan2(ry * (y - k), rx * (x - h))
