@@ -74,7 +74,7 @@ inside_ellipse <- function(coord_ellipse, dims){
                        point.y = dims$Dim2,
                        pol.x = coord_ellipse$Dim1,
                        pol.y = coord_ellipse$Dim2)
-  return(tibble(inside = inside))
+  return(tibble(inside = as.logical(inside)))
 }
 
 # points <- ellipse_df_nested$dims[[1]]
@@ -98,3 +98,39 @@ inside_ellipse <- function(coord_ellipse, dims){
   return(res)
 }
 
+# from ggplot2: different from ellipse::ellipse
+calculate_ellipse <- function(data, vars, type, level, segments){
+  dfn <- 2
+  dfd <- nrow(data) - 1
+
+  if (!type %in% c("t", "norm", "euclid")) {
+    cli::cli_inform("Unrecognized ellipse type")
+    ellipse <- matrix(NA_real_, ncol = 2)
+  } else if (dfd < 3) {
+    cli::cli_inform("Too few points to calculate an ellipse")
+    ellipse <- matrix(NA_real_, ncol = 2)
+  } else {
+    if (type == "t") {
+      v <- MASS::cov.trob(data[,vars])
+    } else if (type == "norm") {
+      v <- stats::cov.wt(data[,vars])
+    } else if (type == "euclid") {
+      v <- stats::cov.wt(data[,vars])
+      v$cov <- diag(rep(min(diag(v$cov)), 2))
+    }
+    shape <- v$cov
+    center <- v$center
+    chol_decomp <- chol(shape)
+    if (type == "euclid") {
+      radius <- level/max(chol_decomp)
+    } else {
+      radius <- sqrt(dfn * stats::qf(level, dfn, dfd))
+    }
+    angles <- (0:segments) * 2 * pi/segments
+    unit.circle <- cbind(cos(angles), sin(angles))
+    ellipse <- t(center + radius * t(unit.circle %*% chol_decomp))
+  }
+
+  colnames(ellipse) <- vars
+  mat_2_df(ellipse)
+}
